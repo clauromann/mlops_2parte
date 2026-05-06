@@ -1,0 +1,6 @@
+# Dependencias para el LabA - Deriva del dato con Evidently AI
+# Instalar con: pip install -r requirements.txt
+
+evidently==0.7.21
+scikit-learn>=1.3.0
+pandas>=2.0.0
