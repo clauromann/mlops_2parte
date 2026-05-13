@@ -1,0 +1,14 @@
+[project]
+name = "labA-t7-titanic-prefect"
+version = "0.1.0"
+description = "Lab A tema 7: workflows con Prefect y Weights & Biases sobre Titanic"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "joblib>=1.4.2",
+    "pandas>=2.2.3",
+    "prefect>=3.6.9",
+    "python-dotenv>=1.2.1",
+    "scikit-learn>=1.6.1",
+    "wandb>=0.25.1",
+]

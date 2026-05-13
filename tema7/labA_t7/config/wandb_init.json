@@ -1,0 +1,7 @@
+{
+  "project": "mlops-titanic-labA-t7",
+  "artifact_name": "titanic_raw",
+  "artifact_type": "dataset",
+  "dataset_filename": "titanic-dataset.csv",
+  "cleaning_steps_filename": "data_cleaning_feature_engineering_steps.md"
+}

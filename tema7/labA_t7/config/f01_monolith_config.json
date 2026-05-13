@@ -1,0 +1,15 @@
+{
+  "project": "mlops-titanic-labA-t7",
+  "job_type": "monolith-train",
+  "raw_artifact_name": "titanic_raw",
+  "raw_artifact_version": "latest",
+  "dataset_filename": "titanic-dataset.csv",
+  "model_artifact_name": "titanic_knn_monolith",
+  "model_artifact_type": "model",
+  "target": "Survived",
+  "numeric_features": ["Age", "Fare"],
+  "categorical_features": ["Pclass", "Sex", "Embarked", "Title", "Family_size_cat"],
+  "test_size": 0.2,
+  "random_state": 42,
+  "n_neighbors": 5
+}
