@@ -1,0 +1,8 @@
+{
+  "training": {
+    "image_name": "clauromann/titanic-runpod-training:latest"
+  },
+  "predict": {
+    "image_name": "clauromann/titanic-runpod-predict:latest"
+  }
+}

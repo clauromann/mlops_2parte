@@ -1,0 +1,8 @@
+{
+  "target": "Survived",
+  "numeric_features": ["Age", "Fare"],
+  "categorical_features": ["Pclass", "Sex", "Embarked", "Title", "Family_size_cat"],
+  "test_size": 0.2,
+  "random_state": 42,
+  "n_neighbors": 5
+}

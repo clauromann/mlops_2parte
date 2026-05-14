@@ -1,0 +1,17 @@
+{
+  "training": {
+    "pod_name": "titanic-training-pod",
+    "cloud_type": "SECURE",
+    "compute_type": "CPU",
+    "cpu_flavor_ids": ["cpu3c"],
+    "vcpu_count": 2,
+    "container_disk_in_gb": 5,
+    "volume_in_gb": 2,
+    "volume_mount_path": "/workspace"
+  },
+  "deployment": {
+    "template_id": "4ut165vizp",
+    "endpoint_id": "8tmte14tvxvl74",
+    "container_disk_in_gb": 5
+  }
+}
