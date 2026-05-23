@@ -59,14 +59,10 @@ build_predict_image:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ""
   before_script:
-    - apk add --no-cache python3 py3-pip
-    - cd tema8
-    - python3 -m pip install --break-system-packages wandb==0.25.1
-    - python3 src/predict/download_model.py
     - echo "$DOCKER_PAT" | docker login --username "$DOCKERHUB_USER" --password-stdin
   script:
     - cd "$CI_PROJECT_DIR"
-    - docker build -t "$DOCKER_IMAGE_TAG" -t "$DOCKER_IMAGE_LATEST" -f tema8/src/predict/Dockerfile tema8
+    - docker build --build-arg WANDB_API_KEY="$WANDB_API_KEY" --build-arg WANDB_ENTITY="$WANDB_ENTITY" -t "$DOCKER_IMAGE_TAG" -t "$DOCKER_IMAGE_LATEST" -f tema8/src/predict/Dockerfile tema8
     - docker push "$DOCKER_IMAGE_TAG"
     - docker push "$DOCKER_IMAGE_LATEST"
   needs:
