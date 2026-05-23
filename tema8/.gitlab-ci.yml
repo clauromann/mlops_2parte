@@ -1,0 +1,124 @@
+stages:
+  - test
+  - process
+  - train
+  - build
+  - deploy_pre
+  - test_pre
+  - deploy_pro
+  - test_pro
+
+variables:
+  PYTHONPATH: "$CI_PROJECT_DIR/tema8/src"
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  DOCKER_IMAGE_TAG: "$DOCKERHUB_IMAGE_NAME:$CI_COMMIT_SHORT_SHA"
+  DOCKER_IMAGE_LATEST: "$DOCKERHUB_IMAGE_NAME:latest"
+
+cache:
+  paths:
+    - .cache/pip
+
+unit_tests:
+  stage: test
+  image: python:3.11-slim
+  script:
+    - cd tema8
+    - pip install -r requirements-dev.txt
+    - pytest tests/unit
+
+process_data:
+  stage: process
+  image: python:3.11-slim
+  script:
+    - cd tema8
+    - pip install -r requirements.txt
+    - python src/processing/process.py
+  artifacts:
+    paths:
+      - tema8/artifacts/processed/
+    expire_in: 1 week
+  needs:
+    - unit_tests
+
+train_model:
+  stage: train
+  image: python:3.11-slim
+  script:
+    - cd tema8
+    - pip install -r requirements.txt
+    - python src/training/train.py
+  needs:
+    - process_data
+
+build_predict_image:
+  stage: build
+  image: docker:27
+  services:
+    - docker:27-dind
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - apk add --no-cache python3 py3-pip
+    - cd tema8
+    - python3 -m pip install --break-system-packages wandb==0.25.1
+    - python3 src/predict/download_model.py
+    - echo "$DOCKER_PAT" | docker login --username "$DOCKERHUB_USER" --password-stdin
+  script:
+    - cd "$CI_PROJECT_DIR"
+    - docker build -t "$DOCKER_IMAGE_TAG" -t "$DOCKER_IMAGE_LATEST" -f tema8/src/predict/Dockerfile tema8
+    - docker push "$DOCKER_IMAGE_TAG"
+    - docker push "$DOCKER_IMAGE_LATEST"
+  needs:
+    - train_model
+
+deploy_pre:
+  stage: deploy_pre
+  image: python:3.11-slim
+  script:
+    - cd tema8
+    - pip install requests==2.32.3
+    - python src/utils/runpod/update_template.py --template-id "$RUNPOD_PRE_TEMPLATE_ID" --image-name "$DOCKER_IMAGE_TAG"
+    - python src/utils/runpod/update_endpoint.py --endpoint-id "$RUNPOD_PRE_ENDPOINT_ID" --template-id "$RUNPOD_PRE_TEMPLATE_ID"
+  needs:
+    - build_predict_image
+
+test_pre:
+  stage: test_pre
+  image: python:3.11-slim
+  variables:
+    ENDPOINT_URL: "https://api.runpod.ai/v2/$RUNPOD_PRE_ENDPOINT_ID"
+  script:
+    - cd tema8
+    - pip install -r requirements-dev.txt
+    - pytest tests/e2e
+  needs:
+    - deploy_pre
+
+deploy_pro:
+  stage: deploy_pro
+  image: python:3.11-slim
+  script:
+    - cd tema8
+    - pip install requests==2.32.3
+    - python src/utils/runpod/update_template.py --template-id "$RUNPOD_PRO_TEMPLATE_ID" --image-name "$DOCKER_IMAGE_TAG"
+    - python src/utils/runpod/update_endpoint.py --endpoint-id "$RUNPOD_PRO_ENDPOINT_ID" --template-id "$RUNPOD_PRO_TEMPLATE_ID"
+  needs:
+    - test_pre
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: manual
+
+test_pro:
+  stage: test_pro
+  image: python:3.11-slim
+  variables:
+    ENDPOINT_URL: "https://api.runpod.ai/v2/$RUNPOD_PRO_ENDPOINT_ID"
+  script:
+    - cd tema8
+    - pip install -r requirements-dev.txt
+    - pytest tests/e2e
+  needs:
+    - deploy_pro
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'

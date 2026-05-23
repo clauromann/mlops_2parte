@@ -1,0 +1,8 @@
+{
+  "wandb": {
+    "entity": "cromangarcia-universidad-loyola",
+    "project": "mlops-titanic-tema8",
+    "model_artifact_name": "titanic_knn_gitlab",
+    "model_artifact_version": "latest"
+  }
+}

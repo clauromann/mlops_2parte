@@ -1,0 +1,17 @@
+{
+  "wandb": {
+    "entity": "cromangarcia-universidad-loyola",
+    "project": "mlops-titanic-tema8",
+    "process_job_type": "data-processing",
+    "raw_artifact_name": "titanic_raw_gitlab",
+    "raw_artifact_type": "dataset",
+    "processed_artifact_name": "titanic_processed_gitlab",
+    "processed_artifact_type": "dataset",
+    "processed_filename": "titanic_processed.csv"
+  },
+  "data": {
+    "raw_path": "src/data/titanic-dataset.csv",
+    "cleaning_steps_path": "src/data/data_cleaning_feature_engineering_steps.md",
+    "output_dir": "artifacts/processed"
+  }
+}

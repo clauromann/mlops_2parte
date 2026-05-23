@@ -1,0 +1,20 @@
+{
+  "wandb": {
+    "entity": "cromangarcia-universidad-loyola",
+    "project": "mlops-titanic-tema8",
+    "train_job_type": "model-train",
+    "processed_artifact_name": "titanic_processed_gitlab",
+    "processed_artifact_version": "latest",
+    "processed_filename": "titanic_processed.csv",
+    "model_artifact_name": "titanic_knn_gitlab",
+    "model_artifact_type": "model"
+  },
+  "training": {
+    "target": "Survived",
+    "numeric_features": ["Age", "Fare"],
+    "categorical_features": ["Pclass", "Sex", "Embarked", "Title", "Family_size_cat"],
+    "test_size": 0.2,
+    "random_state": 42,
+    "n_neighbors": 5
+  }
+}
