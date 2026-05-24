@@ -72,9 +72,6 @@ $CI_COMMIT_SHORT_SHA
 latest
 ```
 
-Usar el SHA del commit sigue la buena práctica vista en clase: no depender solo
-de `latest`.
-
 ### 5. `deploy_pre`
 
 Actualiza la template y endpoint de RunPod del entorno de pruebas (`pre`).
@@ -109,7 +106,7 @@ Variables:
 
 | Variable | Uso |
 | --- | --- |
-| `DOCKERHUB_IMAGE_NAME` | Nombre de imagen, por ejemplo `clauromann/titanic-gitlab-predict` |
+| `DOCKERHUB_IMAGE_NAME` | Nombre de imagen |
 | `DOCKERHUB_USER` | Usuario de Docker Hub |
 | `DOCKER_PAT` | Token de Docker Hub |
 | `RUNPOD_API_KEY` | API key de RunPod |
@@ -118,10 +115,8 @@ Variables:
 | `RUNPOD_PRO_TEMPLATE_ID` | Template de RunPod para pro |
 | `RUNPOD_PRO_ENDPOINT_ID` | Endpoint de RunPod para pro |
 | `WANDB_API_KEY` | API key de W&B |
-| `WANDB_ENTITY` | Entidad de W&B, por ejemplo `cromangarcia-universidad-loyola` |
+| `WANDB_ENTITY` | Entidad de W&B |
 
-Las claves deben configurarse como variables protegidas/enmascaradas cuando sea
-posible. No deben subirse al repositorio.
 
 ## Preparación en RunPod
 
@@ -138,22 +133,3 @@ python:latest
 
 El pipeline actualizará después la imagen real usando la API de RunPod.
 
-## Entrega
-
-El entregable principal es el enlace al repositorio de GitLab compartido con:
-
-```text
-amc.loyola
-```
-
-con rol:
-
-```text
-Maintainer
-```
-
-o:
-
-```text
-Owner
-```
